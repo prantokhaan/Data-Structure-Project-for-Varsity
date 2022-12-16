@@ -1,0 +1,12 @@
+kais
+burger
+300
+5
+kais
+pizza
+1000
+6
+beefin
+vat
+20
+4
