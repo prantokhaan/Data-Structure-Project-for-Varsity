@@ -69,7 +69,21 @@ class UserTemplate{
             cout << temp->address << endl;
             temp = temp->next;
         }
-}
+
+    }
+
+    int userLogin(string user, string pass){
+        User *temp = head;
+        int c=0;
+        while(temp!=NULL){
+            if(temp->username==user && temp->password==pass){
+                c=1;
+                break;
+            }
+            temp=temp->next;
+        }
+        return c;
+    }
 };
 
 

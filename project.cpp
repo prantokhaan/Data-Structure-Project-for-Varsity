@@ -1,7 +1,9 @@
 #include<iostream>
 #include<fstream>
+#include<cctype>
 #include"USER.h"
 #include"STORES.h"
+#include"ORDER.h"
 
 using namespace std;
 
@@ -10,15 +12,19 @@ using namespace std;
 UserTemplate user;
 StoresTemplate stores;
 FoodsTemplate foods;
+OrderTemplate order;
 
 //Global Variables
-string username, address, password, name;
+string username = "a", address="kanchan", password ="a", name;
+string storeName="dail", storePassword="dail", storeAddress, storeOwnerName;
 
 // Function Initialization
+void dashboard();
 void customer();
 void customerLogin(string path);
 void customerRegister();
 void customerDashboard();
+void orderFood();
 void store();
 void storeDashboard();
 void addFoods();
@@ -34,15 +40,16 @@ void addFoods(){
         cout << endl;
         cout << "\t\t\t\t\tEAT NOW -- [Add Food]" << endl;
         cout << endl << "\t\t\t\t--------------------------------------" << endl;
+    fflush(stdin);
     cout << "\t\t\t\t  => Enter Food Name: ";
-    cin >> food;
+    getline(cin, food);
     cout << "\t\t\t\t  => Enter Price: ";
     cin >> price;
     cout << "\t\t\t\t  => Enter Stock: ";
     cin >> stock;
     cout << "\t\t\t\t  => Add More? (y/n): ";
     cin >> o;
-    foods.addFood(username, food, price, stock, 0);
+    foods.addFood(storeName, food, price, stock, 0);
     cout << "\t\t\t\t  Food Added Successfully" << endl;
     if(o=='y' || o=='Y') addFoods();
     else storeDashboard();
@@ -70,12 +77,13 @@ void storeDashboard(){
         cout << "\t\t\t\t  [9] Edit Voucher" << endl;
         cout << "\t\t\t\t  [10] Delete Voucher" << endl;
         
-        cout << "\t\t\t\t  [0] Back" << endl;
+        cout << "\t\t\t\t  [0] Log Out" << endl;
         cout << "\t\t\t\t  -> Enter your choice: ";
         cin >> opt;
         switch(opt){
             case 5:
                 addFoods();
+                break;
             case 4:
                 foods.displayFood();
                 char a;
@@ -91,7 +99,11 @@ void storeDashboard(){
                 char o;
                 cout << "\t\t\t\t  -> Are you sure? (y/n): ";
                 cin >> o;
-                if(o=='y') run = 0;
+                if(o=='y'){
+                    storeName = "";
+                    storePassword = "";
+                    dashboard();
+                }
                 break;
         }
     }
@@ -106,20 +118,23 @@ void storeRegister(){
         cout << "\t\t\t\t\tEAT NOW -- [Store Register]" << endl;
         cout << endl << "\t\t\t\t--------------------------------------" << endl;
     cout << "\t\t\t\t  => Enter your name: ";
-    cin >> name;
+    cin >> storeOwnerName;
     cout << "\t\t\t\t  => Enter your store name: ";
-    cin >> username;
+    fflush(stdin);
+    getline(cin, storeName);
     cout << "\t\t\t\t  => Enter your password: ";
-    cin >> password;
+    fflush(stdin);
+    cin >> storePassword;
     cout << "\t\t\t\t  => Enter your address: ";
-    cin >> address;
+    cin >> storeAddress;
     
-    stores.storeRegisterLinked(username, password, address, name, 0);
+    stores.storeRegisterLinked(storeName, storePassword, storeAddress, storeOwnerName, 0);
     system("cls");
     system("color 0a");
     cout << "\t\t\t\t  Registration Successfull" << endl;
     customerLogin("store");
 }
+
 void store(){
     system("color 0a");
     int run = 1;
@@ -155,6 +170,46 @@ void store(){
 }
 
 // customer part
+void orderFood(){
+    system("color 0d");
+    int run = 1;
+    while(run==1){
+        int opt;
+        system("cls");
+        cout << "\t\t\t\t-------------------------------------"<<endl;
+        cout << endl;
+        cout << "\t\t\t\t  AVAILABLE STORES" << endl;
+        cout << endl << "\t\t\t\t--------------------------------------" << endl;
+        stores.showStores();
+        
+        cout << "\t\t\t\t  [0] Back" << endl;
+        cout << "\t\t\t\t  -> Enter your choice: ";
+        cin >> opt;
+        string found = stores.searchStoreFood(opt);
+        
+        system("cls");
+        cout << "\t\t\t\t-------------------------------------"<<endl;
+        cout << endl;
+        cout << "\t\t\t\t  FOOD OF " << found << endl;
+        cout << endl << "\t\t\t\t--------------------------------------" << endl;
+        foods.displayFoodFromShop(found);
+        cout << "\t\t\t\t   [0] Back" << endl;
+        cout << "\t\t\t\t  -> Enter your choice: ";
+        cin >> opt;
+        cout << "\t\t\t\t  -> How many?: ";
+        int orderAmount;
+        cin >> orderAmount;
+        string selected = foods.selectedFood(opt, found);
+        cout << selected;
+        order.newOrder(username, address, found, selected, "no", "no", "pending", orderAmount, 400, 0);
+        foods.updateStock(selected, orderAmount);
+        cout << "Order Placed Successfully" << endl;
+        cout << endl << "Press a to go back: ";
+        char o;
+        cin >> o;
+        if(o>='a' && o<='z') customerDashboard();
+    }
+}
 
 void customerDashboard(){
     system("color 0d");
@@ -176,9 +231,13 @@ void customerDashboard(){
         cin >> opt;
         switch(opt){
             case 1:
-                stores.showStores();
-                char c;
-                cin >> c;
+                orderFood();
+                break;
+            case 2:
+                order.displayMyOrder(username);
+                char b;
+                cin >> b;
+                break;
             case 4:
                 user.displayUser();
                 char a;
@@ -186,7 +245,7 @@ void customerDashboard(){
                 cin >> a;
                 // function for show foods
                 break;
-            case 2:
+            case 6:
                 // function for show my orders
                 break;
             
@@ -219,7 +278,7 @@ void customerRegister(){
     system("cls");
     system("color 0a");
     cout << "\t\t\t\t  Registration Successfull" << endl;
-    customerLogin("customer");
+    customerLogin("store");
 }
 
 void customerLogin(string path){
@@ -230,15 +289,30 @@ void customerLogin(string path){
         cout << endl;
         cout << "\t\t\t\t\tEAT NOW -- ["<<path<<" Login]" << endl;
         cout << endl << "\t\t\t\t--------------------------------------" << endl;
+    fflush(stdin);
     cout << "\t\t\t\t  => Enter your username: ";
-    cin >> us;
+    getline(cin, us);
+    fflush(stdin);
     cout << "\t\t\t\t  => Enter your Password: ";
     cin >> pass;
-    if(us==username && pass == password){
-        if(path=="customer") customerDashboard();
-        else storeDashboard();
+    if(path=="customer"){
+        int check = user.userLogin(us, pass);
+        if(check==1){
+            username = us;
+            password = pass;
+            customerDashboard();
+        }
+        else cout << "Invalid, Try Again\n";
     }
-    else cout << "Something Wrong" << endl;
+    else if(path=="store"){
+        int check = stores.storeLogin(us, pass);
+        if(check==1){
+            storeName = us;
+            storePassword = pass;
+            storeDashboard();
+        }
+        else cout << "Invalid, Try again\n";
+    }
     
 }
 
@@ -266,6 +340,45 @@ void customer(){
                 customerRegister();
                 break;
             
+            case 0:
+                char o;
+                cout << "\t\t\t\t  -> Are you sure? (y/n): ";
+                cin >> o;
+                if(o=='y') run = 0;
+                break;
+        }
+    }
+}
+
+void dashboard(){
+    int run = 1;
+    while(run==1){
+        int opt;
+        system("cls");
+        cout << "\t\t\t\t-------------------------------------"<<endl;
+        cout << endl;
+        cout << "\t\t\t\t\t\tEAT NOW" << endl;
+        cout << endl << "\t\t\t\t--------------------------------------" << endl;
+        cout << "\t\t\t\t  [1] Customer" << endl;
+        cout << "\t\t\t\t  [2] Store Owner" << endl;
+        cout << "\t\t\t\t  [3] Rider" << endl;
+        cout << "\t\t\t\t  [4] Administrator" << endl;
+        cout << "\t\t\t\t  [0] Exit" << endl;
+        cout << "\t\t\t\t  -> Enter your choice: ";
+        cin >> opt;
+        switch(opt){
+            case 1:
+                customer();
+                break;
+            case 2:
+                store();
+                break;
+            case 3:
+                // rider login page
+                break;
+            case 4:
+                
+                break;
             case 0:
                 char o;
                 cout << "\t\t\t\t  -> Are you sure? (y/n): ";
@@ -315,40 +428,22 @@ int main(){
         }
     }
     finf.close();
-    int run = 1;
-    while(run==1){
-        int opt;
-        system("cls");
-        cout << "\t\t\t\t-------------------------------------"<<endl;
-        cout << endl;
-        cout << "\t\t\t\t\t\tEAT NOW" << endl;
-        cout << endl << "\t\t\t\t--------------------------------------" << endl;
-        cout << "\t\t\t\t  [1] Customer" << endl;
-        cout << "\t\t\t\t  [2] Store Owner" << endl;
-        cout << "\t\t\t\t  [3] Rider" << endl;
-        cout << "\t\t\t\t  [4] Administrator" << endl;
-        cout << "\t\t\t\t  [0] Exit" << endl;
-        cout << "\t\t\t\t  -> Enter your choice: ";
-        cin >> opt;
-        switch(opt){
-            case 1:
-                customer();
-                break;
-            case 2:
-                store();
-                break;
-            case 3:
-                // rider login page
-                break;
-            case 4:
-                
-                break;
-            case 0:
-                char o;
-                cout << "\t\t\t\t  -> Are you sure? (y/n): ";
-                cin >> o;
-                if(o=='y') run = 0;
-                break;
+    string orderUser, orderAddress, orderStore, orderFood, orderStoreApprove, orderRider, orderDeli;
+    int orderAmount, orderPrice;
+    ifstream orders("order.txt");
+    if(!orders.fail()){
+        while(orders >> orderUser){
+            orders>>orderAddress;
+            orders>>orderStore;
+            orders>>orderFood;
+            orders>> orderStoreApprove;
+            orders>>orderRider;
+            orders>>orderDeli;
+            orders>>orderAmount;
+            orders>>orderPrice;
+            order.newOrder(orderUser, orderAddress, orderStore, orderFood, orderStoreApprove, orderRider, orderDeli, orderAmount, orderPrice, 1);
         }
     }
+    orders.close();
+    dashboard();
 }

@@ -2,6 +2,7 @@
 #include<fstream>
 using namespace std;
 
+
 class Stores{
     public: 
         string ownerName;
@@ -65,10 +66,41 @@ class StoresTemplate{
         Stores *temp = head;
         int i = 1;
         while(temp!=NULL){
-            cout << "\t\t\t\t ==> " << i << " " <<  temp->storeName<<endl;
+            if(i<10) cout << "\t\t\t\t   [" << i <<"] " <<  temp->storeName<<endl;
+            else cout << "\t\t\t\t  [" << i <<"] " <<  temp->storeName<<endl;
             i++;
             temp=temp->next;
         }
+    }
+
+    string searchStoreFood(int val){
+        int c = 1;
+        Stores *temp = head;
+
+        if(temp==NULL) return "-1";
+        while(c!=val){
+            if(temp->next==NULL) return "-1";
+            temp = temp->next;
+            c++;
+        }
+
+        string found = temp->storeName;
+        
+        return found;
+    }
+    int storeLogin(string store, string pass){
+        Stores *temp = head;
+
+        if(temp==NULL) return 0;
+        int c=0;
+        while(temp!=NULL){
+            if(temp->storeName==store && temp->password==pass){
+                c = 1;
+                break;
+            }
+            temp=temp->next;
+        }
+        return c;
     }
 };
 
@@ -128,5 +160,43 @@ class FoodsTemplate{
                 cout << temp->storeName << endl;
                 temp=temp->next;
             }
+        }
+
+        void displayFoodFromShop(string storeName){
+            Foods *temp = head;
+            int i=1;
+            while(temp!=NULL){
+                if(temp->storeName==storeName){
+                    if(i<10) cout << "\t\t\t\t   [" << i <<"] " <<  temp->name << "->" << temp->stock <<endl;
+                    else cout << "\t\t\t\t  [" << i <<"] " <<  temp->name << "->" << temp->stock<<endl;
+                    i++;
+                }
+                temp=temp->next;
+            }
+        }
+
+        string selectedFood(int val, string store){
+            Foods *temp = head;
+            int c=1;
+            if(temp==NULL) return "-1";
+            while(temp!=NULL){
+                if(temp->storeName==store){
+                    if(c==val) break;
+                    c++;
+                }
+                    temp = temp->next;
+                }
+
+            string found = temp->name;
+        
+            return found;
+        }
+
+        void updateStock(string food, int a){
+            Foods *temp = head;
+            while(temp->name!=food){
+                temp = temp->next;
+            }
+            temp->stock = temp->stock - a;
         }
 };
