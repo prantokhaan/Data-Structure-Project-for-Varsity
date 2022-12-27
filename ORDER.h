@@ -81,13 +81,346 @@ class OrderTemplate{
         void displayMyOrder(string username){
             Order *temp = head;
             if(temp==NULL) return;
+            cout << "\t\t Name \t|\t Amount \t|\t Price \t\t|\t Status" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
             while(temp!=NULL){
                 if(temp->username==username){
-                    cout << temp->foodName << endl;
-                    cout << temp->amount << endl;
-                    cout << temp->delivered << endl;
+                    cout << "\t\t " << temp->foodName << " \t\t "<<temp->amount<< " \t\t " << temp->price << " \t\t\t " << temp->delivered << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
                 }
                 temp=temp->next;
             }
         }
+        
+        void displayStoreOrder(string storeName){
+            Order *temp = head;
+            if(temp==NULL) return;
+            cout << "\t\t Name \t|\t Amount \t|\t Price \t\t|\t Status" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
+            while(temp!=NULL){
+                if(temp->storeName==storeName && temp->delivered == "pending"){
+                    cout << "\t\t " << temp->foodName << " \t\t "<<temp->amount<< " \t\t " << temp->price << " \t\t\t " << temp->delivered << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
+                }
+                temp=temp->next;
+            }
+        }
+        
+        void displayStoreAllOrder(string storeName){
+            Order *temp = head;
+            if(temp==NULL) return;
+            cout << "\t\t Name \t|\t Amount \t|\t Price \t\t|\t Status" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
+            while(temp!=NULL){
+                if(temp->storeName==storeName){
+                    cout << "\t\t " << temp->foodName << " \t\t "<<temp->amount<< " \t\t " << temp->price << " \t\t\t " << temp->delivered << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
+                }
+                temp=temp->next;
+            }
+        }
+
+        void confirmOrderByStore(int pos, string store, string status){
+            Order *temp = head;
+            if(temp==NULL) return;
+            int c=1, cc=1;
+
+            
+
+            while(temp!=NULL){
+                if(c==pos && temp->storeName==store && temp->delivered==status) break;
+                if(temp->storeName==store && temp->delivered=="pending"){
+                    c++;
+                }
+                cc++;
+                temp = temp->next;
+            }
+
+            temp->delivered = "preparing";
+            cout << "\t\t\t\t\t--Order Updated--" << endl;
+
+            string uname, adres, sname, fname, sap, rap, deliv, am, pri;
+            int a, p;
+            ifstream read;
+            ofstream write;
+            write.open("temp.txt", ios::out | ios::app);
+            read.open("order.txt");
+            int co = 1;
+            Order *res = head;
+            if(!read.fail()){
+                while(getline(read, uname)){
+                    if(co==cc){
+                            getline(read, adres);
+                            getline(read, sname);
+                            getline(read, fname);
+                            getline(read, sap);
+                            getline(read, rap);
+                            getline(read, deliv);
+                            getline(read, am);
+                            getline(read, pri);
+                            a = stoi(am);
+                            p = stoi(pri);
+                            deliv = "preparing";
+
+                            write << uname << endl;
+                            write << adres << endl;
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << sap << endl;
+                            write << rap << endl;
+                            write << deliv << endl;
+                            write << a << endl;
+                            write << p << endl;
+                       
+                            
+                    }else{
+                            getline(read, adres);
+                            getline(read, sname);
+                            getline(read, fname);
+                            getline(read, sap);
+                            getline(read, rap);
+                            getline(read, deliv);
+                            getline(read, am);
+                            getline(read, pri);
+                            a = stoi(am);
+                            p = stoi(pri);
+
+                            write << uname << endl;
+                            write << adres << endl;
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << sap << endl;
+                            write << rap << endl;
+                            write << deliv << endl;
+                            write << a << endl;
+                            write << p << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+            else{
+                cout << "file not opened";
+            }
+            read.close();
+            write.close();
+            remove("order.txt");
+            rename("temp.txt", "order.txt");
+            }
+
+        string riderFound(){
+            Order *temp = head;
+            string rider;
+            if(temp==NULL) return "no";
+
+            while(temp->next!=NULL){
+                temp=temp->next;
+            }
+
+            rider = temp->next->riderAccepted;
+            return rider;
+        }
+
+        void riderPendingOrder(string rider){
+            Order *temp = head;
+            if(temp==NULL) return;
+            cout << "\t\t Name \t|\t Amount \t|\t Price \t\t|\t Address" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
+            while(temp!=NULL){
+                if(temp->riderAccepted==rider && temp->delivered=="preparing"){
+                    cout << "\t\t " << temp->foodName << " \t\t "<<temp->amount<< " \t\t " << temp->price << " \t\t\t " << temp->address << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
+                }
+                temp=temp->next;
+            }
+        }
+
+        void riderPickedOrder(string rider){
+            Order *temp = head;
+            if(temp==NULL) return;
+            cout << "\t\t Name \t|\t Amount \t|\t Price \t\t|\t Address" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
+            while(temp!=NULL){
+                if(temp->riderAccepted==rider && temp->delivered=="picked"){
+                    cout << "\t\t " << temp->foodName << " \t\t "<<temp->amount<< " \t\t " << temp->price << " \t\t\t " << temp->address << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
+                }
+                temp=temp->next;
+            }
+        }
+
+        void confirmOrderByRider(int pos, string rider){
+            Order *temp = head;
+            if(temp==NULL) return;
+            int c=1, cc=1;
+
+            
+
+            while(temp!=NULL){
+                if(c==pos && temp->riderAccepted==rider && temp->delivered=="preparing") break;
+                if(temp->riderAccepted==rider && temp->delivered=="preparing"){
+                    c++;
+                }
+                cc++;
+                temp = temp->next;
+            }
+
+            temp->delivered = "picked";
+            cout << "\t\t\t\t\t--Order Updated--" << endl;
+
+            string uname, adres, sname, fname, sap, rap, deliv, am, pri;
+            int a, p;
+            ifstream read;
+            ofstream write;
+            write.open("temp.txt", ios::out | ios::app);
+            read.open("order.txt");
+            int co = 1;
+            Order *res = head;
+            if(!read.fail()){
+                while(getline(read, uname)){
+                    if(co==cc){
+                            getline(read, adres);
+                            getline(read, sname);
+                            getline(read, fname);
+                            getline(read, sap);
+                            getline(read, rap);
+                            getline(read, deliv);
+                            getline(read, am);
+                            getline(read, pri);
+                            a = stoi(am);
+                            p = stoi(pri);
+                            deliv = "picked";
+
+                            write << uname << endl;
+                            write << adres << endl;
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << sap << endl;
+                            write << rap << endl;
+                            write << deliv << endl;
+                            write << a << endl;
+                            write << p << endl;
+                       
+                            
+                    }else{
+                            getline(read, adres);
+                            getline(read, sname);
+                            getline(read, fname);
+                            getline(read, sap);
+                            getline(read, rap);
+                            getline(read, deliv);
+                            getline(read, am);
+                            getline(read, pri);
+                            a = stoi(am);
+                            p = stoi(pri);
+
+                            write << uname << endl;
+                            write << adres << endl;
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << sap << endl;
+                            write << rap << endl;
+                            write << deliv << endl;
+                            write << a << endl;
+                            write << p << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("order.txt");
+            rename("temp.txt", "order.txt");
+            
+            }
+
+        void deliverOrderByRider(int pos, string rider){
+            Order *temp = head;
+            if(temp==NULL) return;
+            int c=1, cc=1;
+
+            
+
+            while(temp!=NULL){
+                if(c==pos && temp->riderAccepted==rider && temp->delivered=="picked") break;
+                if(temp->riderAccepted==rider && temp->delivered=="picked"){
+                    c++;
+                }
+                cc++;
+                temp = temp->next;
+            }
+
+            temp->delivered = "delivered";
+            cout << "\t\t\t\t\t--Order Updated--" << endl;
+
+            string uname, adres, sname, fname, sap, rap, deliv, am, pri;
+            int a, p;
+            ifstream read;
+            ofstream write;
+            write.open("temp.txt", ios::out | ios::app);
+            read.open("order.txt");
+            int co = 1;
+            Order *res = head;
+            if(!read.fail()){
+                while(getline(read, uname)){
+                    if(co==cc){
+                            getline(read, adres);
+                            getline(read, sname);
+                            getline(read, fname);
+                            getline(read, sap);
+                            getline(read, rap);
+                            getline(read, deliv);
+                            getline(read, am);
+                            getline(read, pri);
+                            a = stoi(am);
+                            p = stoi(pri);
+                            deliv = "delivered";
+
+                            write << uname << endl;
+                            write << adres << endl;
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << sap << endl;
+                            write << rap << endl;
+                            write << deliv << endl;
+                            write << a << endl;
+                            write << p << endl;
+                       
+                            
+                    }else{
+                            getline(read, adres);
+                            getline(read, sname);
+                            getline(read, fname);
+                            getline(read, sap);
+                            getline(read, rap);
+                            getline(read, deliv);
+                            getline(read, am);
+                            getline(read, pri);
+                            a = stoi(am);
+                            p = stoi(pri);
+
+                            write << uname << endl;
+                            write << adres << endl;
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << sap << endl;
+                            write << rap << endl;
+                            write << deliv << endl;
+                            write << a << endl;
+                            write << p << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("order.txt");
+            rename("temp.txt", "order.txt");
+            
+        }
+        
 };

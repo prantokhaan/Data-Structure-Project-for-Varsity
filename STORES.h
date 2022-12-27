@@ -10,16 +10,16 @@ class Stores{
         string password;
         int balance;
         string address;
-        bool isApproved;
+        int isApproved;
         Stores *next;
 
-        Stores(string oName, string sName, string pass, string ad){
+        Stores(string oName, string sName, string pass, string ad, int bal, int isap){
             ownerName = oName;
             storeName = sName;
             password = pass;
-            balance = 0;
+            balance = bal;
             address = ad;
-            isApproved = false;
+            isApproved = isap;
             next = NULL;
         }
 };
@@ -27,8 +27,9 @@ class Stores{
 class StoresTemplate{
     Stores *head;
     public:
-    void storeRegisterLinked(string sName, string pass, string ad, string name, int file){
-    Stores *newStore = new Stores(name, sName, pass, ad);
+
+    void storeRegisterLinked(string sName, string pass, string ad, string name, int bal, int isap, int file){
+    Stores *newStore = new Stores(name, sName, pass, ad, bal, isap);
 
     if(head==NULL){
         head = newStore;
@@ -62,6 +63,7 @@ class StoresTemplate{
                 fout.close();
         }
     }
+    
     void showStores(){
         Stores *temp = head;
         int i = 1;
@@ -71,6 +73,123 @@ class StoresTemplate{
             i++;
             temp=temp->next;
         }
+    }
+
+    void showStoresNotApproved(){
+        Stores *temp = head;
+
+        int i=1;
+            cout << "\t\t No \t|\t Owner \t\t|\t Store \t\t|\t Status" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
+            while(temp!=NULL){
+                if(temp->isApproved==0){
+                   cout << "\t\t " << i << " \t\t "<<temp->ownerName<< " \t\t " << temp->storeName << " \t\t\t " << "Not Approved" << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
+                    i++;
+                }
+                temp=temp->next;
+            }
+    }
+
+    void showAllStores(){
+        Stores *temp = head;
+
+        int i=1;
+            cout << "\t\t No \t|\t Owner \t\t|\t Name \t\t|\t Status" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
+            while(temp!=NULL){
+                
+                if(temp->isApproved==0){
+                    cout << "\t\t " << i << " \t\t "<<temp->ownerName<< " \t\t " << temp->storeName << " \t\t\t " << "Not Approved" << endl;
+                }else if(temp->isApproved==1){
+                    cout << "\t\t " << i << " \t\t "<<temp->ownerName<< " \t\t " << temp->storeName << " \t\t\t " << "Approved" << endl;
+                }
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
+                    i++;
+                
+                temp=temp->next;
+            }
+    }
+
+    void approveStore(int opt){
+        Stores *temp = head;
+        int c = 0, cc=1;
+
+        while(temp!=NULL){ 
+            if(temp->isApproved == 0){
+                break;
+            }
+            cc++;
+            temp = temp->next;
+        }
+        temp->isApproved = 1;
+        int newIsap = temp->isApproved;
+
+        string oname, sname, pas, ball, add, ip;
+        int balancee, isAp;
+
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("store.txt");
+        int co = 1;
+        Stores *res = head;
+
+        if(!read.fail()){
+                while(getline(read, oname)){
+                    if(co==cc){
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << pas << endl;
+                            write << balancee << endl;
+                            write << add << endl;
+                            write << newIsap << endl;
+                       
+                            
+                    }else{
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << pas << endl;
+                            write << balancee << endl;
+                            write << add << endl;
+                            write << isAp << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("store.txt");
+            rename("temp.txt", "store.txt");
+            cout << endl<< "\t\t\t-----Store Approved------"<<endl;
+    }
+
+    int returnApprovalStatus(string store){
+        Stores *temp = head;
+        while(temp->storeName!=store) temp=temp->next;
+
+        int status = temp->isApproved;
+        return status;
     }
 
     string searchStoreFood(int val){
@@ -88,6 +207,7 @@ class StoresTemplate{
         
         return found;
     }
+
     int storeLogin(string store, string pass){
         Stores *temp = head;
 
@@ -101,6 +221,93 @@ class StoresTemplate{
             temp=temp->next;
         }
         return c;
+    }
+
+    void updateStoreBalance(string store, int bal){
+        Stores *temp = head;
+        int c = 1;
+
+        while(temp->storeName!=store){
+            temp = temp->next;
+            c++;
+        }
+
+        temp->balance += bal;
+        int b = temp->balance;
+
+        string oname, sname, pas, ball, add, ip;
+        int balancee, isAp;
+
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("store.txt");
+        int co = 1;
+        Stores *res = head;
+
+        if(!read.fail()){
+                while(getline(read, oname)){
+                    if(co==c){
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << pas << endl;
+                            write << b << endl;
+                            write << add << endl;
+                            write << isAp << endl;
+                       
+                            
+                    }else{
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << pas << endl;
+                            write << balancee << endl;
+                            write << add << endl;
+                            write << isAp << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("store.txt");
+            rename("temp.txt", "store.txt");
+    }
+
+    void myAccount(string name){
+        Stores *temp = head;
+        while(temp!=NULL){
+            if(temp->storeName==name){
+                cout << endl;
+                cout << "\t\t\t\t " << temp->storeName << endl;
+                cout << "\t\t\t--------------------------------" << endl;
+                cout << "\t\t\t Owner: " << temp->ownerName << endl;
+                if(temp->isApproved==0) cout << "\t\t\t Approval Status: Not Approved" << endl;
+                else cout << "\t\t\t Approval Status: Approved" << endl;
+                cout << "\t\t\t Balance: " << temp->balance << " TK" << endl;
+                cout << "\t\t\t Address: " << temp->address << endl;
+            }
+            temp=temp->next;
+        }
     }
 };
 
@@ -152,12 +359,14 @@ class FoodsTemplate{
                     fout.close();
                 }
         }
-        void displayFood(){
+        
+        void displayFood(string store){
             Foods *temp = head;
             while(temp!=NULL){
-                cout << temp->name << endl;
-                cout << temp->price << endl;
-                cout << temp->storeName << endl;
+                if(temp->storeName==store){
+                    cout << "\t\t-------------------------------------------------" << endl;
+                    
+                }
                 temp=temp->next;
             }
         }
@@ -165,10 +374,12 @@ class FoodsTemplate{
         void displayFoodFromShop(string storeName){
             Foods *temp = head;
             int i=1;
+            cout << "\t\t No \t|\t Name \t\t|\t Price \t\t|\t Stock" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
             while(temp!=NULL){
                 if(temp->storeName==storeName){
-                    if(i<10) cout << "\t\t\t\t   [" << i <<"] " <<  temp->name << "->" << temp->stock <<endl;
-                    else cout << "\t\t\t\t  [" << i <<"] " <<  temp->name << "->" << temp->stock<<endl;
+                   cout << "\t\t " << i << " \t\t "<<temp->name<< " \t\t " << temp->price << " \t\t\t " << temp->stock << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
                     i++;
                 }
                 temp=temp->next;
@@ -192,11 +403,269 @@ class FoodsTemplate{
             return found;
         }
 
-        void updateStock(string food, int a){
+        int orderFoodPrice(int val, string store){
             Foods *temp = head;
-            while(temp->name!=food){
+            int c=1;
+            if(temp==NULL) return -1;
+            while(temp!=NULL){
+                if(temp->storeName==store){
+                    if(c==val) break;
+                    c++;
+                }
+                    temp = temp->next;
+                }
+
+            int found = temp->price;
+        
+            return found;
+        }
+
+        int updateStock(string food, int a, string store){
+            Foods *temp = head;
+            int c = 1;
+            while(1){
+                if(temp->name==food && temp->storeName==store) break;
                 temp = temp->next;
+                c++;
             }
             temp->stock = temp->stock - a;
+            int s = temp->stock;
+
+        string sname, fname, pric, sto;
+        int pr, st;
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("food.txt");
+        int co = 1;
+        Foods *res = head;
+
+        if(!read.fail()){
+                while(getline(read, sname)){
+                    if(co==c){
+                            getline(read, fname);
+                            getline(read, pric);
+                            getline(read, sto);
+                            
+                            pr = stoi(pric);
+                            st = stoi(sto);
+
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << pr << endl;
+                            write << s << endl;
+                       
+                            
+                    }else{
+                            getline(read, fname);
+                            getline(read, pric);
+                            getline(read, sto);
+                            
+                            pr = stoi(pric);
+                            st = stoi(sto);
+
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << pr << endl;
+                            write << st << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("food.txt");
+            rename("temp.txt", "food.txt");
+        return s;
+
+        }
+
+        void editName(string food, string newName, string store){
+            Foods *temp = head;
+            int c = 1;
+            while(1){
+                if(temp->name==food && temp->storeName==store) break;
+                temp = temp->next;
+                c++;
+            }
+            temp->name = newName;
+
+        string sname, fname, pric, sto;
+        int pr, st;
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("food.txt");
+        int co = 1;
+        Foods *res = head;
+
+        if(!read.fail()){
+                while(getline(read, sname)){
+                    if(co==c){
+                            getline(read, fname);
+                            getline(read, pric);
+                            getline(read, sto);
+                            
+                            pr = stoi(pric);
+                            st = stoi(sto);
+
+                            write << sname << endl;
+                            write << newName << endl;
+                            write << pr << endl;
+                            write << st << endl;
+                       
+                            
+                    }else{
+                            getline(read, fname);
+                            getline(read, pric);
+                            getline(read, sto);
+                            
+                            pr = stoi(pric);
+                            st = stoi(sto);
+
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << pr << endl;
+                            write << st << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("food.txt");
+            rename("temp.txt", "food.txt");
+        }
+
+        void editPrice(string food, int newPrice, string store){
+            Foods *temp = head;
+            int c = 1;
+            while(1){
+                if(temp->name==food && temp->storeName==store) break;
+                temp = temp->next;
+                c++;
+            }
+            temp->price = newPrice;
+
+        string sname, fname, pric, sto;
+        int pr, st;
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("food.txt");
+        int co = 1;
+        Foods *res = head;
+
+        if(!read.fail()){
+                while(getline(read, sname)){
+                    if(co==c){
+                            getline(read, fname);
+                            getline(read, pric);
+                            getline(read, sto);
+                            
+                            pr = stoi(pric);
+                            st = stoi(sto);
+
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << newPrice << endl;
+                            write << st << endl;
+                       
+                            
+                    }else{
+                            getline(read, fname);
+                            getline(read, pric);
+                            getline(read, sto);
+                            
+                            pr = stoi(pric);
+                            st = stoi(sto);
+
+                            write << sname << endl;
+                            write << fname << endl;
+                            write << pr << endl;
+                            write << st << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("food.txt");
+            rename("temp.txt", "food.txt");
+        }
+
+        int foodCount(){
+            Foods *temp = head;
+            int c=0;
+
+            while(temp!=NULL){
+                c++;
+                temp = temp->next;
+            }
+
+            return c;
+        }
+
+        int findIndexOfFood(string food, string store){
+            Foods *temp = head;
+            int c = 1;
+            while(1){
+                if(temp->name==food&&temp->storeName==store) break;
+
+                c++;
+                temp = temp->next;
+            }
+            return c;
+        }
+
+        void deleteHeadFood(){
+            Foods *temp = head;
+            if(temp!=NULL){
+                head = temp->next;
+                delete temp;
+                cout << "\t\t\t----Food Deleted----" << endl;
+            }
+        }
+
+        void deleteTailFood(){
+            Foods *temp = head;
+            // int last = foodCount();
+            if(temp!=NULL && temp->next!=NULL){
+            while(temp->next->next!=NULL) temp=temp->next;
+            Foods *delNode = temp->next;
+            temp->next = NULL;
+            delete delNode;
+            cout << "Successfully Deleted" << endl;
+            }else if(temp->next==NULL){
+                deleteHeadFood();
+            }else{
+                cout << "There is no value" << endl;
+            }       
+        }
+
+        void deleteFood(int pos){
+            Foods *temp = head;
+
+            if(temp!=NULL && pos<=foodCount()){
+            if(pos==1) deleteHeadFood();
+            else if(pos == foodCount()) deleteTailFood();
+            else{
+                int i=1;
+                while(i<pos-1){
+                    temp=temp->next;
+                    i++;
+                }
+                Foods *delNode = temp->next;
+                temp->next = delNode->next;
+                delete delNode;
+                cout << "Successfully deleted" << endl;
+        }
+    }else cout << "Invalid Position" << endl;
         }
 };
