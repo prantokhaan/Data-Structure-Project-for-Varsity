@@ -1,11 +1,11 @@
 Charlie
 Teriyaki Chicken
 157
-9
+8
 Charlie
 Chicken Combo
 144
-10
+9
 Charlie
 Beef Chili
 169
@@ -17,7 +17,7 @@ Chicken Tikka
 Charlie
 Fish Box
 255
-15
+14
 Charlie
 Beef Hot Dog
 254
@@ -33,7 +33,7 @@ Double Beef Burger
 Charlie
 Rib Eye
 425
-13
+11
 KFC
 Classic Zinger Meal
 949
@@ -109,4 +109,8 @@ Cappuccino
 Kavazo
 Latte
 216
-9
+8
+Kaised
+Burger
+70
+8

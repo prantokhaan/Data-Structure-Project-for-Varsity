@@ -422,5 +422,18 @@ class OrderTemplate{
             rename("temp.txt", "order.txt");
             
         }
+
+        void showDonatedFood(){
+            Order *temp = head;
+            cout << "\t\t Name \t|\t Amount \t|\t Price \t\t|\t Donor" << endl;
+            cout << "\t\t-------------------------------------------------------------------------" << endl;
+            while(temp!=NULL){
+                if(temp->address=="donate"){
+                    cout << "\t\t " << temp->foodName << " \t\t "<<temp->amount<< " \t\t " << temp->price << " \t\t\t " << temp->username << endl;
+                    cout << "\t\t-------------------------------------------------------------------------" << endl;
+                }
+                temp=temp->next;
+            }
+        }
         
 };

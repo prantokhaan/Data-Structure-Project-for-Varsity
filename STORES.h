@@ -309,6 +309,156 @@ class StoresTemplate{
             temp=temp->next;
         }
     }
+
+    void changePassword(string store, string newP){
+        Stores *temp = head;
+        int c = 1;
+
+        while(temp->storeName!=store){
+            temp = temp->next;
+            c++;
+        }
+        temp->password = newP;
+        string newpass = temp->password;
+
+        string oname, sname, pas, ball, add, ip;
+        int balancee, isAp;
+
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("store.txt");
+        int co = 1;
+        Stores *res = head;
+
+        if(!read.fail()){
+                while(getline(read, oname)){
+                    if(co==c){
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << newpass << endl;
+                            write << balancee << endl;
+                            write << add << endl;
+                            write << isAp << endl;
+                       
+                            
+                    }else{
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << pas << endl;
+                            write << balancee << endl;
+                            write << add << endl;
+                            write << isAp << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("store.txt");
+            rename("temp.txt", "store.txt");
+            cout << "\t\t\t-----Password Changed----" << endl;
+    }
+
+    int returnStoreBalance(string store){
+        Stores *temp = head;
+        while(temp->storeName!=store){
+            temp = temp->next;
+        }
+        int b = temp->balance;
+        return b;
+    }
+
+    void withdrawBalance(string store, int with){
+        Stores *temp = head;
+        int c = 1;
+        while(temp->storeName!=store){
+            temp = temp->next;
+            c++;
+        }
+
+        temp->balance -= with;
+        int newBalance = temp->balance;
+
+        string oname, sname, pas, ball, add, ip;
+        int balancee, isAp;
+
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("store.txt");
+        int co = 1;
+        Stores *res = head;
+
+        if(!read.fail()){
+                while(getline(read, oname)){
+                    if(co==c){
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << pas << endl;
+                            write << newBalance << endl;
+                            write << add << endl;
+                            write << isAp << endl;
+                       
+                            
+                    }else{
+                            getline(read, sname);
+                            getline(read, pas);
+                            getline(read, ball);
+                            getline(read, add);
+                            getline(read, ip);
+                            
+                            balancee = stoi(ball);
+                            isAp = stoi(ip);
+
+                            write << oname << endl;
+                            write << sname << endl;
+                            write << pas << endl;
+                            write << balancee << endl;
+                            write << add << endl;
+                            write << isAp << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("store.txt");
+            rename("temp.txt", "store.txt");
+
+            cout << "\t\t\t\tWithdrawal Successfull" << endl;
+    }
 };
 
 class Foods{

@@ -4,8 +4,8 @@ kanchan
 pranto
 bike
 yes
-0
-1
+50
+7
 1001
 kaised
 dhaka
@@ -17,7 +17,7 @@ yes
 1002
 tasnim
 potu
-tasnim
+mukta
 cycle
 yes
 0

@@ -311,5 +311,270 @@ class RiderTemplate{
             rename("temp.txt", "rider.txt");
     }
 
+    void myAccount(string rider){
+        Rider *temp = head;
+        while(temp!=NULL){
+            if(temp->riderName==rider){
+                cout << endl;
+                
+                cout << "\t\t\t--------------------------------" << endl;
+                cout << "\t\t\t Name: " << temp->riderName << endl;
+                cout << "\t\t\t Balance: " << temp->riderBalance << endl;
+                cout << "\t\t\t Orders: " << temp->riderOrderComplete  << endl;
+            }
+            temp=temp->next;
+        }
+    }
+
+    void balanceUpdate(string rider, int money){
+        Rider *temp = head;
+        int c = 1;
+        while(temp->riderName!=rider){
+            temp = temp->next;
+            c++;
+        }
+        temp->riderBalance += money;
+        int newBalance = temp->riderBalance;
+
+        string rId, rName, rAdd, rPass, rBy, rApp, rBal, rOrC;
+        int id, bal, order;
+
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("rider.txt");
+        int co = 1;
+        Rider *res = head;
+
+        if(!read.fail()){
+                while(getline(read, rId)){
+                    if(co==c){
+                            getline(read, rName);
+                            getline(read, rAdd);
+                            getline(read, rPass);
+                            getline(read, rBy);
+                            getline(read, rApp);
+                            getline(read, rBal);
+                            getline(read, rOrC);
+                            
+                            id = stoi(rId);
+                            bal = stoi(rBal);
+                            order = stoi(rOrC);
+
+                            write << id << endl;
+                            write << rName << endl;
+                            write << rAdd << endl;
+                            write << rPass << endl;
+                            write << rBy << endl;
+                            write << rApp << endl;
+                            write << newBalance << endl;
+                            write << order << endl;
+                       
+                            
+                    }else{
+                            getline(read, rName);
+                            getline(read, rAdd);
+                            getline(read, rPass);
+                            getline(read, rBy);
+                            getline(read, rApp);
+                            getline(read, rBal);
+                            getline(read, rOrC);
+                            
+                            id = stoi(rId);
+                            bal = stoi(rBal);
+                            order = stoi(rOrC);
+
+                            write << id << endl;
+                            write << rName << endl;
+                            write << rAdd << endl;
+                            write << rPass << endl;
+                            write << rBy << endl;
+                            write << rApp << endl;
+                            write << bal << endl;
+                            write << order << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("rider.txt");
+            rename("temp.txt", "rider.txt");
+
+            
+
+    }
+
+    void changePassword(string rider, string newP){
+        Rider *temp = head;
+        int c = 1;
+
+        while(temp->riderName!=rider){
+            temp = temp->next;
+            c++;
+        }
+
+        temp->riderPassword = newP;
+        string newpass = temp->riderPassword;
+
+        string rId, rName, rAdd, rPass, rBy, rApp, rBal, rOrC;
+        int id, bal, order;
+
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("rider.txt");
+        int co = 1;
+        Rider *res = head;
+
+        if(!read.fail()){
+                while(getline(read, rId)){
+                    if(co==c){
+                            getline(read, rName);
+                            getline(read, rAdd);
+                            getline(read, rPass);
+                            getline(read, rBy);
+                            getline(read, rApp);
+                            getline(read, rBal);
+                            getline(read, rOrC);
+                            
+                            id = stoi(rId);
+                            bal = stoi(rBal);
+                            order = stoi(rOrC);
+
+                            write << id << endl;
+                            write << rName << endl;
+                            write << rAdd << endl;
+                            write << newpass << endl;
+                            write << rBy << endl;
+                            write << rApp << endl;
+                            write << bal << endl;
+                            write << order << endl;
+                       
+                            
+                    }else{
+                            getline(read, rName);
+                            getline(read, rAdd);
+                            getline(read, rPass);
+                            getline(read, rBy);
+                            getline(read, rApp);
+                            getline(read, rBal);
+                            getline(read, rOrC);
+                            
+                            id = stoi(rId);
+                            bal = stoi(rBal);
+                            order = stoi(rOrC);
+
+                            write << id << endl;
+                            write << rName << endl;
+                            write << rAdd << endl;
+                            write << rPass << endl;
+                            write << rBy << endl;
+                            write << rApp << endl;
+                            write << bal << endl;
+                            write << order << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("rider.txt");
+            rename("temp.txt", "rider.txt");
+            cout << "\t\t\t\t ----Password Changed----" << endl;
+
+    }
+
+    int returnBalance(string rider){
+        Rider *temp = head;
+        while(temp->riderName!=rider) temp = temp->next;
+
+        int b = temp->riderBalance;
+        return b;
+    }
+
+    void withdraw(string rider, int money){
+        Rider *temp = head;
+        int c = 1;
+
+        while(temp->riderName!=rider){
+            temp = temp->next;
+            c++;
+        }
+        temp->riderBalance -= money;
+        int newBal = temp->riderBalance;
+
+        string rId, rName, rAdd, rPass, rBy, rApp, rBal, rOrC;
+        int id, bal, order;
+
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("rider.txt");
+        int co = 1;
+        Rider *res = head;
+
+        if(!read.fail()){
+                while(getline(read, rId)){
+                    if(co==c){
+                            getline(read, rName);
+                            getline(read, rAdd);
+                            getline(read, rPass);
+                            getline(read, rBy);
+                            getline(read, rApp);
+                            getline(read, rBal);
+                            getline(read, rOrC);
+                            
+                            id = stoi(rId);
+                            bal = stoi(rBal);
+                            order = stoi(rOrC);
+
+                            write << id << endl;
+                            write << rName << endl;
+                            write << rAdd << endl;
+                            write << rPass << endl;
+                            write << rBy << endl;
+                            write << rApp << endl;
+                            write << newBal << endl;
+                            write << order << endl;
+                       
+                            
+                    }else{
+                            getline(read, rName);
+                            getline(read, rAdd);
+                            getline(read, rPass);
+                            getline(read, rBy);
+                            getline(read, rApp);
+                            getline(read, rBal);
+                            getline(read, rOrC);
+                            
+                            id = stoi(rId);
+                            bal = stoi(rBal);
+                            order = stoi(rOrC);
+
+                            write << id << endl;
+                            write << rName << endl;
+                            write << rAdd << endl;
+                            write << rPass << endl;
+                            write << rBy << endl;
+                            write << rApp << endl;
+                            write << bal << endl;
+                            write << order << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("rider.txt");
+            rename("temp.txt", "rider.txt");
+            cout << "\t\t\t\t ----Withdraw Successfull----" << endl;
+    }
 };
 

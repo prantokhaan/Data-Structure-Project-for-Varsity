@@ -2,8 +2,6 @@
 #include<fstream>
 using namespace std;
 
-
-
 class User{
     public:
         string phone;
@@ -335,6 +333,137 @@ class UserTemplate{
         string ad = temp->address;
 
         return ad;
+    }
+
+    void editAddress(string euser, string ad){
+        User *temp = head;
+        int c = 1;
+        while(temp->username!=euser){
+            temp = temp->next;
+            c++;
+        }
+        temp->address = ad;
+        string newAddress = temp->address;
+
+        string user, pass, add, bala, nofd;
+        int balan, nofrd;
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("user.txt");
+        int co = 1;
+        User *res = head;
+
+        if(!read.fail()){
+                while(getline(read, user)){
+                    if(co==c){
+                            getline(read, pass);
+                            getline(read, add);
+                            getline(read, bala);
+                            getline(read, nofd);
+                            
+                            balan = stoi(bala);
+                            nofrd = stoi(nofd);
+
+                            write << user << endl;
+                            write << pass << endl;
+                            write << newAddress << endl;
+                            write << balan << endl;
+                            write << nofrd << endl;
+                       
+                            
+                    }else{
+                            getline(read, pass);
+                            getline(read, add);
+                            getline(read, bala);
+                            getline(read, nofd);
+                            
+                            balan = stoi(bala);
+                            nofrd = stoi(nofd);
+
+                            write << user << endl;
+                            write << pass << endl;
+                            write << add << endl;
+                            write << balan << endl;
+                            write << nofrd << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("user.txt");
+            rename("temp.txt", "user.txt");
+
+            cout << "\t\t\t ----Address Updated----" << endl;
+
+    }
+
+    void editPassword(string euser, string passw){
+        User *temp = head;
+        int c = 1;
+        while(temp->username!=euser){
+            temp = temp->next;
+            c++;
+        }
+        temp->password = passw;
+        string newAddress = temp->password;
+
+        string user, pass, add, bala, nofd;
+        int balan, nofrd;
+        ifstream read;
+        ofstream write;
+        write.open("temp.txt", ios::out | ios::app);
+        read.open("user.txt");
+        int co = 1;
+        User *res = head;
+
+        if(!read.fail()){
+                while(getline(read, user)){
+                    if(co==c){
+                            getline(read, pass);
+                            getline(read, add);
+                            getline(read, bala);
+                            getline(read, nofd);
+                            
+                            balan = stoi(bala);
+                            nofrd = stoi(nofd);
+
+                            write << user << endl;
+                            write << newAddress << endl;
+                            write << add << endl;
+                            write << balan << endl;
+                            write << nofrd << endl;
+                       
+                            
+                    }else{
+                            getline(read, pass);
+                            getline(read, add);
+                            getline(read, bala);
+                            getline(read, nofd);
+                            
+                            balan = stoi(bala);
+                            nofrd = stoi(nofd);
+
+                            write << user << endl;
+                            write << pass << endl;
+                            write << add << endl;
+                            write << balan << endl;
+                            write << nofrd << endl;
+                    }
+                    co++;
+                    res=res->next;
+                }
+            }
+
+            read.close();
+            write.close();
+            remove("user.txt");
+            rename("temp.txt", "user.txt");
+
+            cout << "\t\t\t ----Password Updated----" << endl;
     }
 };
 
